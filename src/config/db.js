@@ -1,7 +1,5 @@
 const mongoose = require("mongoose")
 
-
-
 function connectToDB(){
 
     mongoose.connect(process.env.MONGO_URI)
@@ -10,7 +8,7 @@ function connectToDB(){
     })
     .catch(err=>{
         console.log("Error connecting to DB")
-        process.exit(1) //server is closed 
+        process.exit(1)
     })
 }
 
