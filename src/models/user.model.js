@@ -20,6 +20,13 @@ const userSchema = new mongoose.Schema({
         required: [true, "Password is required for creating an account"],
         minlength: [6,"Password should contain more than 6 character"],
         select: false
+    },
+
+    systemUser: {
+        type: Boolean,
+        default: false,
+        immutable: true,
+        select: false
     }
 
 },{
@@ -29,7 +36,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save",async function(){
     if(!this.isModified("password")){
         return 
-    }
+    } 
 
     const hash = await bcrypt.hash(this.password, 10)
     this.password = hash
