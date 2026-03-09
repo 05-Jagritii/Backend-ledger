@@ -25,7 +25,7 @@ const accountSchema = new mongoose.Schema({
     }
 },{
     timestamps: true
-})
+}) 
 
 
 accountSchema.index({user: 1, status: 1})
