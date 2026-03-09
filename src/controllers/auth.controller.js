@@ -105,7 +105,7 @@ async function userLoginController(req,res){
 */
 
 async function userLogoutController(req,res){
-  const token = req.cookes.token || req.headers.authorization?.split(" ")[1]
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
 
   if(!token){
     return res.status(200).json({
@@ -115,15 +115,23 @@ async function userLogoutController(req,res){
 
   
 
-  await tokenBlackListModel.create({
-    token: token
-  })
+  try {
+    await tokenBlackListModel.create({
+      token: token
+    })
 
-  res.clearCookie("token")
+    res.clearCookie("token")
 
-  res.status(200).json({
-    messsage: "User logged out successfully"
-  })
+    return res.status(200).json({
+      message: "User logged out successfully"
+    })
+  } catch(error) {
+    // Token may already be blacklisted - still clear cookie and return success
+    res.clearCookie("token")
+    return res.status(200).json({      
+      message: "User logged out successfully"
+   })
+ }
 }
 
 
