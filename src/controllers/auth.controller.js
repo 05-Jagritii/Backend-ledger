@@ -38,6 +38,8 @@ async function userRegisterController(req, res) {
 
     res.cookie("token", token);
 
+    await emailService.sendRegistrationEmail(user.email,user.name)
+
     res.status(201).json({
       user: {
         _id: user._id,
@@ -47,9 +49,12 @@ async function userRegisterController(req, res) {
       token
     });
 
-    await emailService.sendRegistrationEmail(user.email,user.name)
+    
 
   } catch (error) {
+
+    console.error("REGISTER ERROR:", error);
+    
     res.status(500).json({
       message: "Internal server error"
     });
@@ -64,7 +69,7 @@ async function userRegisterController(req, res) {
 async function userLoginController(req,res){
     const {email, password} = req.body
 
-    const user = await userModel.findOne({email}).select("password")
+    const user = await userModel.findOne({email}).select("+password name email")
 
     if(!user){
         return res.status(401).json({
